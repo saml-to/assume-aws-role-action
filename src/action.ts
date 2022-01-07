@@ -66,7 +66,7 @@ export class Action {
       region: 'us-east-1',
       credentials: {
         accessKeyId: assumeResponse.Credentials.AccessKeyId,
-        secretAccessKey: assumeResponse.Credentials.AccessKeyId,
+        secretAccessKey: assumeResponse.Credentials.SecretAccessKey,
         sessionToken: assumeResponse.Credentials.SessionToken,
       },
     });
