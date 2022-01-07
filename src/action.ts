@@ -30,6 +30,7 @@ export class Action {
 
     try {
       const { data: response } = await api.assumeRoleForRepo(org, repo, role, provider);
+      console.log('!!! response', JSON.stringify(response, null, 2));
       await this.assumeAws(response);
     } catch (e) {
       if (axios.isAxiosError(e)) {
