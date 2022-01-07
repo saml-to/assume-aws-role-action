@@ -1,4 +1,4 @@
-import { getInput, setOutput } from '@actions/core';
+import { exportVariable, getInput, setOutput } from '@actions/core';
 import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -74,6 +74,11 @@ export class Action {
     const callerIdentity = await assumedSts.getCallerIdentity({});
 
     console.log('Assumed AWS Role:', JSON.stringify(callerIdentity, null, 2));
+
+    exportVariable('AWS_DEFAULT_REGION', 'us-east-1');
+    exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
+    exportVariable('AWS_SECRET_ACCESS_KEY', assumeResponse.Credentials.SecretAccessKey);
+    exportVariable('AWS_SESSION_TOKEN', assumeResponse.Credentials.SessionToken);
 
     setOutput('accessKeyId', assumeResponse.Credentials.AccessKeyId);
     setOutput('secretAccessKey', assumeResponse.Credentials.SecretAccessKey);
