@@ -61,6 +61,20 @@ export class Action {
     ) {
       throw new Error('Missing credentials');
     }
+
+    const assumedSts = new STS({
+      region: 'us-east-1',
+      credentials: {
+        accessKeyId: assumeResponse.Credentials.AccessKeyId,
+        secretAccessKey: assumeResponse.Credentials.AccessKeyId,
+        sessionToken: assumeResponse.Credentials.SessionToken,
+      },
+    });
+
+    const callerIdentity = await assumedSts.getCallerIdentity({});
+
+    console.log('Assumed AWS Role:', JSON.stringify(callerIdentity, null, 2));
+
     setOutput('accessKeyId', assumeResponse.Credentials.AccessKeyId);
     setOutput('secretAccessKey', assumeResponse.Credentials.SecretAccessKey);
     setOutput('sessionToken', assumeResponse.Credentials.SessionToken);
