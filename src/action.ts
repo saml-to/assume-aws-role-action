@@ -39,6 +39,7 @@ export class Action {
         }
         throw new Error(`Unable to assume role: ${message}`);
       }
+      throw e;
     }
   }
 
