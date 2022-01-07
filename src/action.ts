@@ -30,9 +30,7 @@ export class Action {
 
     try {
       const { data: response } = await api.assumeRoleForRepo(org, repo, role, provider);
-      if (!response.sdkOptions) {
-        throw new Error(`SDK Options were missing from response`);
-      }
+      await this.assumeAws(response);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let message = e.message;
