@@ -46,8 +46,7 @@
     "js-yaml": "^4.1.0",
     "loglevel": "^1.8.0",
     "moment": "^2.29.1",
-    "open": "^8.4.0",
-    "yargs": "^17.3.0"
+    "open": "^8.4.0"
   },
   "devDependencies": {
     "@aws-sdk/client-sts": "^3.43.0",
