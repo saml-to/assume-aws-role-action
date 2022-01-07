@@ -50,6 +50,7 @@
     "open": "^8.4.0"
   },
   "devDependencies": {
+    "@actions/core": "^1.6.0",
     "@aws-sdk/client-sts": "^3.43.0",
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.0",
