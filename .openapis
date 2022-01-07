@@ -6,5 +6,5 @@
 # This file is *safe* to add to source control and will increase the speed of builds
 ---
 - serviceName: github-sls-rest-api
-  version: 1.0.7
+  version: 1.0.8-0
 
