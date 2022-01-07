@@ -1,0 +1,39 @@
+name: Push to Main
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['12', '14', '16']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node }}-yarn-
+      - uses: actions/cache@v2
+        with:
+          path: ./api
+          key: ${{ runner.os }}-${{ matrix.node }}-openapi-${{ hashFiles('./.openapis') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node }}-openapi-
+      - run: yarn
+      - run: yarn openapi
+      - run: yarn build
+      - if: ${{ matrix.node == '12' }}
+        uses: scaffoldly/bump-version-action@v1
+        with:
+          action: prerelease
+          version-file: package.json
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
