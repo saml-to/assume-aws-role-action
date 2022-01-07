@@ -1,14 +1,15 @@
 import { Action } from './action';
-import core from '@actions/core';
+import { setFailed } from '@actions/core';
 
 (async () => {
   try {
-    const command = new Action();
-    await command.run();
+    const action = new Action();
+    await action.run();
   } catch (e) {
     if (e instanceof Error) {
       console.error(`Error: ${e.message}`);
-      core.setFailed(e.message);
+      setFailed(e.message);
+      return;
     }
     throw e;
   }

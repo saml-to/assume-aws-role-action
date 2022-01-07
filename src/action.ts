@@ -1,4 +1,4 @@
-import core from '@actions/core';
+import { getInput, setOutput } from '@actions/core';
 import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -10,9 +10,9 @@ import {
 
 export class Action {
   async run(): Promise<void> {
-    const token = core.getInput('token', { required: true });
-    const role = core.getInput('role', { required: true });
-    const provider = core.getInput('provider', { required: false });
+    const token = getInput('token', { required: true });
+    const role = getInput('role', { required: true });
+    const provider = getInput('provider', { required: false });
     if (role && provider) {
       console.log(`Assuming ${role} (provider: ${provider})`);
     } else {
@@ -71,8 +71,8 @@ export class Action {
     ) {
       throw new Error('Missing credentials');
     }
-    core.setOutput('accessKeyId', assumeResponse.Credentials.AccessKeyId);
-    core.setOutput('secretAccessKey', assumeResponse.Credentials.SecretAccessKey);
-    core.setOutput('sessionToken', assumeResponse.Credentials.SessionToken);
+    setOutput('accessKeyId', assumeResponse.Credentials.AccessKeyId);
+    setOutput('secretAccessKey', assumeResponse.Credentials.SecretAccessKey);
+    setOutput('sessionToken', assumeResponse.Credentials.SessionToken);
   }
 }
