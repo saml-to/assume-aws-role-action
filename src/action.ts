@@ -22,7 +22,7 @@ export class Action {
     const [org, repo] = githubRepository.split('/');
     if (!org || !repo) {
       throw new Error(
-        `Unalbe to parse owner and repo from GITHUB_REPOSITORY environment variable: ${githubRepository}`,
+        `Unable to parse owner and repo from GITHUB_REPOSITORY environment variable: ${githubRepository}`,
       );
     }
 
@@ -30,7 +30,6 @@ export class Action {
 
     try {
       const { data: response } = await api.assumeRoleForRepo(org, repo, role, provider);
-      console.log('!!! response', JSON.stringify(response, null, 2));
       await this.assumeAws(response);
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -54,7 +53,6 @@ export class Action {
       ...opts,
       SAMLAssertion: response.samlResponse,
     });
-    console.log('!!! assumeResponse', JSON.stringify(assumeResponse));
     if (
       !assumeResponse.Credentials ||
       !assumeResponse.Credentials.AccessKeyId ||
