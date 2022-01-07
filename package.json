@@ -37,6 +37,7 @@
     "typescript"
   ],
   "peerDependencies": {
+    "@actions/core": "^1.6.0",
     "@aws-sdk/client-sts": "^3.43.0",
     "@octokit/oauth-app": "^3.6.0",
     "@octokit/request-error": "^2.1.0",
@@ -84,8 +85,5 @@
     "webpack-cli": "^4.9.1",
     "webpack-node-externals": "^3.0.0",
     "yargs": "^17.3.0"
-  },
-  "dependencies": {
-    "@actions/core": "^1.6.0"
   }
 }
