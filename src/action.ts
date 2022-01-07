@@ -1,4 +1,4 @@
-import { exportVariable, getInput, setOutput } from '@actions/core';
+import { exportVariable, getInput, info, setOutput } from '@actions/core';
 import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -13,7 +13,7 @@ export class Action {
     const token = getInput('token', { required: true });
     const role = getInput('role', { required: true });
     const provider = getInput('provider', { required: true });
-    console.log(`Assuming ${role} (provider: ${provider})`);
+    info(`Assuming ${provider} Role: ${role}`);
 
     const githubRepository = process.env.GITHUB_REPOSITORY;
     if (!githubRepository) {
@@ -73,7 +73,13 @@ export class Action {
 
     const callerIdentity = await assumedSts.getCallerIdentity({});
 
-    console.log('Assumed AWS Role:', JSON.stringify(callerIdentity, null, 2));
+    info(
+      `Assumed AWS Role: ${JSON.stringify(
+        { UserId: callerIdentity.UserId, Account: callerIdentity.Account, Arn: callerIdentity.Arn },
+        null,
+        2,
+      )}`,
+    );
 
     exportVariable('AWS_DEFAULT_REGION', 'us-east-1');
     exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
