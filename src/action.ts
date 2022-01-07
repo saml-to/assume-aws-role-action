@@ -30,6 +30,7 @@ export class Action {
 
     try {
       const { data: response } = await api.assumeRoleForRepo(org, repo, role, provider);
+      console.log('!!! response', JSON.stringify(response));
       await this.assumeAws(response);
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -52,6 +53,7 @@ export class Action {
       ...opts,
       SAMLAssertion: response.samlResponse,
     });
+    console.log('!!! assumeResponse', JSON.stringify(assumeResponse));
     if (
       !assumeResponse.Credentials ||
       !assumeResponse.Credentials.AccessKeyId ||
