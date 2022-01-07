@@ -12,7 +12,7 @@ inputs:
     required: true
   provider:
     description: The provider to use in saml-to.yml
-    required: false
+    required: true
 outputs:
   accessKeyId:
     description: The AWS Access Key ID

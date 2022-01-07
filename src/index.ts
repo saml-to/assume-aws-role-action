@@ -7,7 +7,6 @@ import { setFailed } from '@actions/core';
     await action.run();
   } catch (e) {
     if (e instanceof Error) {
-      console.error(`Error: ${e.message}`);
       setFailed(e.message);
       return;
     }

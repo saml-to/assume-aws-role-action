@@ -12,12 +12,8 @@ export class Action {
   async run(): Promise<void> {
     const token = getInput('token', { required: true });
     const role = getInput('role', { required: true });
-    const provider = getInput('provider', { required: false });
-    if (role && provider) {
-      console.log(`Assuming ${role} (provider: ${provider})`);
-    } else {
-      console.log(`Assuming ${role}`);
-    }
+    const provider = getInput('provider', { required: true });
+    console.log(`Assuming ${role} (provider: ${provider})`);
 
     const githubRepository = process.env.GITHUB_REPOSITORY;
     if (!githubRepository) {
@@ -33,12 +29,7 @@ export class Action {
     const api = new IDPApi(new Configuration({ accessToken: token }));
 
     try {
-      const { data: response } = await api.assumeRoleForRepo(
-        org,
-        repo,
-        role,
-        provider || undefined,
-      );
+      const { data: response } = await api.assumeRoleForRepo(org, repo, role, provider);
       if (!response.sdkOptions) {
         throw new Error(`SDK Options were missing from response`);
       }
