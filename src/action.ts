@@ -44,7 +44,7 @@ export class Action {
   }
 
   async assumeAws(response: GithubSlsRestApiSamlResponseContainer): Promise<void> {
-    const sts = new STS({});
+    const sts = new STS({ region: 'us-east-1' });
     const opts = response.sdkOptions as GithubSlsRestApiAwsAssumeSdkOptions;
     if (!opts) {
       throw new Error('Missing sdk options from saml response');
