@@ -10,10 +10,24 @@ inputs:
   role:
     description: The ARN of the role to assume
     required: true
+  region:
+    description: The AWS Region
+    required: false
+    default: 'us-east-1'
   provider:
     description: The provider to use in saml-to.yml
-    required: true
+    required: false
 outputs:
+  region:
+    description: The AWS region
+  accountId:
+    description: The AWS Account ID
+  userId:
+    description: The Ephemeral User ID
+  roleArn:
+    description: The ARN of the Role
+  assumedRoleArn:
+    description: The effective ARN of the Assumed Role
   accessKeyId:
     description: The AWS Access Key ID
   secretAccessKey:

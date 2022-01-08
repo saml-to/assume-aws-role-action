@@ -1,5 +1,5 @@
-import { exportVariable, getInput, info, setOutput } from '@actions/core';
-import { STS } from '@aws-sdk/client-sts';
+import { error, exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
+import { AssumeRoleWithSAMLResponse, STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
   Configuration,
@@ -12,8 +12,13 @@ export class Action {
   async run(): Promise<void> {
     const token = getInput('token', { required: true });
     const role = getInput('role', { required: true });
-    const provider = getInput('provider', { required: true });
-    info(`Assuming ${provider} Role: ${role}`);
+    const provider = getInput('provider', { required: false });
+    const region = getInput('region', { required: false }) || 'us-east-1';
+    if (provider) {
+      info(`Assuming ${provider} Role: ${role} in ${region}`);
+    } else {
+      info(`Assuming Role: ${role} in ${region}`);
+    }
 
     const githubRepository = process.env.GITHUB_REPOSITORY;
     if (!githubRepository) {
@@ -29,8 +34,16 @@ export class Action {
     const api = new IDPApi(new Configuration({ accessToken: token }));
 
     try {
-      const { data: response } = await api.assumeRoleForRepo(org, repo, role, provider);
-      await this.assumeAws(response);
+      const { data: response } = await api.assumeRoleForRepo(
+        org,
+        repo,
+        role,
+        provider || undefined,
+      );
+
+      info(`SAML Response generated for ${response.provider} for login via ${response.recipient}`);
+
+      await this.assumeAws(response, region);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let message = e.message;
@@ -43,16 +56,32 @@ export class Action {
     }
   }
 
-  async assumeAws(response: GithubSlsRestApiSamlResponseContainer): Promise<void> {
-    const sts = new STS({ region: 'us-east-1' });
+  async assumeAws(response: GithubSlsRestApiSamlResponseContainer, region: string): Promise<void> {
+    const sts = new STS({ region });
     const opts = response.sdkOptions as GithubSlsRestApiAwsAssumeSdkOptions;
     if (!opts) {
       throw new Error('Missing sdk options from saml response');
     }
-    const assumeResponse = await sts.assumeRoleWithSAML({
-      ...opts,
-      SAMLAssertion: response.samlResponse,
-    });
+
+    let assumeResponse: AssumeRoleWithSAMLResponse;
+    try {
+      assumeResponse = await sts.assumeRoleWithSAML({
+        ...opts,
+        SAMLAssertion: response.samlResponse,
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      if (e && e.code && e.code === 'AuthSamlInvalidSamlResponseException') {
+        error(e);
+        setFailed(
+          `Please ensure the Metadata is correct for Identity Provider \`${opts.PrincipalArn}\` in AWS IAM. The Metadata can be downloaded here: ${response.issuer}`,
+        );
+      } else {
+        throw e;
+      }
+      return;
+    }
+
     if (
       !assumeResponse.Credentials ||
       !assumeResponse.Credentials.AccessKeyId ||
@@ -63,7 +92,7 @@ export class Action {
     }
 
     const assumedSts = new STS({
-      region: 'us-east-1',
+      region,
       credentials: {
         accessKeyId: assumeResponse.Credentials.AccessKeyId,
         secretAccessKey: assumeResponse.Credentials.SecretAccessKey,
@@ -73,19 +102,18 @@ export class Action {
 
     const callerIdentity = await assumedSts.getCallerIdentity({});
 
-    info(
-      `Assumed AWS Role: ${JSON.stringify(
-        { UserId: callerIdentity.UserId, Account: callerIdentity.Account, Arn: callerIdentity.Arn },
-        null,
-        2,
-      )}`,
-    );
+    info(`Assumed AWS Role: ${callerIdentity.Arn}`);
 
-    exportVariable('AWS_DEFAULT_REGION', 'us-east-1');
+    exportVariable('AWS_DEFAULT_REGION', region);
     exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
     exportVariable('AWS_SECRET_ACCESS_KEY', assumeResponse.Credentials.SecretAccessKey);
     exportVariable('AWS_SESSION_TOKEN', assumeResponse.Credentials.SessionToken);
 
+    setOutput('region', region);
+    setOutput('accountId', callerIdentity.Account);
+    setOutput('userId', callerIdentity.UserId);
+    setOutput('roleArn', opts.RoleArn);
+    setOutput('assumedRoleArn', callerIdentity.Arn);
     setOutput('accessKeyId', assumeResponse.Credentials.AccessKeyId);
     setOutput('secretAccessKey', assumeResponse.Credentials.SecretAccessKey);
     setOutput('sessionToken', assumeResponse.Credentials.SessionToken);
