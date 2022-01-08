@@ -41,7 +41,7 @@ export class Action {
         provider || undefined,
       );
 
-      info(`SAML Response generated for ${response.provider} for login via ${response.recipient}`);
+      info(`SAML Response generated for login to ${response.provider} via ${response.recipient}`);
 
       await this.assumeAws(response, region);
     } catch (e) {
@@ -102,7 +102,9 @@ export class Action {
 
     const callerIdentity = await assumedSts.getCallerIdentity({});
 
-    info(`Assumed AWS Role: ${callerIdentity.Arn}`);
+    info(
+      `Assumed ${opts.RoleArn}: ${callerIdentity.Arn} (Credential expiration at ${assumeResponse.Credentials.Expiration})`,
+    );
 
     exportVariable('AWS_DEFAULT_REGION', region);
     exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
