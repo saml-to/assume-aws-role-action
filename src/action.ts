@@ -1,4 +1,4 @@
-import { error, exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
+import { exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
 import { AssumeRoleWithSAMLResponse, STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
