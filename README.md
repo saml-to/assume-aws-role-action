@@ -58,7 +58,7 @@ steps:
      ]
    }
    ```
-   - Replace `PROVIDER_ARN` with the newly created ARN of the provider, e.g. `arn:aws:iam::0123456789012:saml-provider/saml.to`
+   - Replace `PROVIDER_ARN` with the newly created ARN of the provider, e.g. `arn:aws:iam::123456789012:saml-provider/saml.to`
    - Make note of the **`Role ARN`** for this Role
 1. Add a new file named _`saml-to.yml`_ to the repository that needs AWS Access Credentials during GitHub Actions:
 
