@@ -1,4 +1,4 @@
-import { exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
+import { error, exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
 import { AssumeRoleWithSAMLResponse, STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -78,17 +78,17 @@ export class Action {
     } catch (e: any) {
       console.log('!!! e', JSON.stringify(e));
       if (e && e.Code && e.Code === 'InvalidIdentityToken') {
-        info(
+        error(
           `AWS IAM couldn't find a SAML provider with an ARN of \`${opts.PrincipalArn}\`. Please ensure the ARN is correct and is in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`. The ARN can be found in by navigating into the desired SAML Provider in AWS IAM's "Identity Providers" subsection. If a provider hasn't been created yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`,
         );
       }
       if (e && e.Code && e.Code === 'ValidationError') {
-        info(
+        error(
           `AWS IAM couldn't assume the role \`${opts.RoleArn}\`. Please ensure the Role ARN is correct and is in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`. If the role hasn't been created yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`,
         );
       }
       if (e && e.code && e.code === 'AuthSamlInvalidSamlResponseException') {
-        info(
+        error(
           `Please ensure the Metadata is correct for Identity Provider \`${opts.PrincipalArn}\` in AWS IAM. The Metadata can be downloaded here: ${response.issuer}`,
         );
       }
