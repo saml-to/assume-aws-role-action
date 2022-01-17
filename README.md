@@ -1,12 +1,13 @@
 # assume-aws-role-action
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/saml-to/assume-aws-role-action?label=version) ![GitHub issues](https://img.shields.io/github/issues/saml-to/assume-aws-role-action) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/saml-to/assume-aws-role-action/Push%20to%20Main)![Gitter](https://img.shields.io/gitter/room/saml-to/assume-aws-role-action)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/saml-to/assume-aws-role-action?label=version) ![GitHub issues](https://img.shields.io/github/issues/saml-to/assume-aws-role-action) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/saml-to/assume-aws-role-action/Push%20to%20Main)! [Gitter](https://img.shields.io/gitter/room/saml-to/assume-aws-role-action)
 
 This action enables workflows to obtain AWS Access Credentials for a desired IAM Role using **AWS IAM SAML** and a **GitHub Actions Repository Token**.
 
 Benefits:
- - No need to copy/paste AWS Access Tokens into GitHub Secrets
- - No need to rotate AWS Access Tokens
+
+- No need to copy/paste AWS Access Tokens into GitHub Secrets
+- No need to rotate AWS Access Tokens
 
 This action uses [SAML.to](https://saml.to) and an [AWS IAM Identity Provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html) to exchange a [GitHub Actions Token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication) for AWS Access Credentials.
 
