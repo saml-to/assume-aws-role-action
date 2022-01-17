@@ -8,9 +8,15 @@ import {
   GithubSlsRestApiAwsAssumeSdkOptions,
 } from '../api/github-sls-rest-api';
 
+const { GITHUB_TOKEN, GITHUB_REPOSITORY } = process.env;
+
 export class Action {
   async run(): Promise<void> {
-    const token = getInput('token', { required: true });
+    if (!GITHUB_TOKEN) {
+      setFailed(`Missing GITHUB_TOKEN environment variable`);
+      return;
+    }
+
     const role = getInput('role', { required: true });
     const provider = getInput('provider', { required: false });
     const region = getInput('region', { required: false }) || 'us-east-1';
@@ -20,18 +26,17 @@ export class Action {
       info(`Assuming Role: ${role} in ${region}`);
     }
 
-    const githubRepository = process.env.GITHUB_REPOSITORY;
-    if (!githubRepository) {
+    if (!GITHUB_REPOSITORY) {
       throw new Error('Missing GITHUB_REPOSITORY environment variable');
     }
-    const [org, repo] = githubRepository.split('/');
+    const [org, repo] = GITHUB_REPOSITORY.split('/');
     if (!org || !repo) {
       throw new Error(
-        `Unable to parse owner and repo from GITHUB_REPOSITORY environment variable: ${githubRepository}`,
+        `Unable to parse owner and repo from GITHUB_REPOSITORY environment variable: ${GITHUB_REPOSITORY}`,
       );
     }
 
-    const api = new IDPApi(new Configuration({ accessToken: token }));
+    const api = new IDPApi(new Configuration({ accessToken: GITHUB_TOKEN }));
 
     try {
       const { data: response } = await api.assumeRoleForRepo(

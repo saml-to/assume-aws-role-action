@@ -4,9 +4,6 @@ branding:
   icon: 'arrow-up-circle'
   color: 'blue'
 inputs:
-  token:
-    description: The GitHub token
-    required: true
   role:
     description: The ARN of the role to assume
     required: true
