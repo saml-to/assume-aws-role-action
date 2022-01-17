@@ -77,15 +77,15 @@ export class Action {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e && e.code && e.code === 'AuthSamlInvalidSamlResponseException') {
-        error(e);
         setFailed(
           `Please ensure the Metadata is correct for Identity Provider \`${opts.PrincipalArn}\` in AWS IAM. The Metadata can be downloaded here: ${response.issuer}`,
         );
-      } else if (e && e.code && e.code === 'AuthSamlManifestNotFoundException') {
         error(e);
+      } else if (e && e.code && e.code === 'AuthSamlManifestNotFoundException') {
         setFailed(
           `AWS couldn't find a SAML provider with an ARN of \`${opts.PrincipalArn}\`. Please ensure the ARN is correct and is in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`. The ARN can be found in by navigating into the desired SAML Provider in AWS IAM's "Identity Providers" subsection. If a provider hasn't been created yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`,
         );
+        error(e);
       } else {
         throw e;
       }
