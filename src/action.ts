@@ -77,7 +77,7 @@ export class Action {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.log('!!! e', JSON.stringify(e));
-      if (e && e.code && e.code === 'InvalidIdentityToken') {
+      if (e && e.Code && e.Code === 'InvalidIdentityToken') {
         setFailed(
           `AWS IAM couldn't find a SAML provider with an ARN of \`${opts.PrincipalArn}\`. Please ensure the ARN is correct and is in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`. The ARN can be found in by navigating into the desired SAML Provider in AWS IAM's "Identity Providers" subsection. If a provider hasn't been created yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`,
         );
