@@ -33,6 +33,10 @@ steps:
   - run: aws ec2 describe-instances
 ```
 
+## Examples
+
+See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role-action-examples)
+
 ## Configuration
 
 1. Create a new **SAML** [Identity Provider](https://console.aws.amazon.com/iamv2/home?#/identity_providers/create) in AWS IAM
@@ -176,10 +180,6 @@ The generated AWS Session Toke.
 
 This is also be set in the `AWS_SESSION_TOKEN` environment variable.
 
-## Examples
-
-See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role-action-examples)
-
 ## Advanced Configuration
 
 See [Advanced](ADVANCED.md)
@@ -192,7 +192,7 @@ See [Advanced](ADVANCED.md)
 ## Help & Support
 
 - [Gitter](https://gitter.im/saml-to/assume-aws-role-action)
-- [Twitter](https://twitter.com/SamlToSupport)
+- [Support via Twitter](https://twitter.com/SamlToSupport)
 - [Discussions](https://github.com/saml-to/assume-aws-role-action/discussions)
 
 ## License

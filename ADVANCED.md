@@ -2,19 +2,19 @@
 
 ## HOW-TO: Move `saml-to.yml` to a centralized repository
 
-TODO
+[Message us on Gitter for this!](https://gitter.im/saml-to/assume-aws-role-action)
 
 ## HOW-TO: Use Additional Identity Providers
 
-TODO
+[Message us on Gitter for this!](https://gitter.im/saml-to/assume-aws-role-action)
 
 ## HOW-TO: Allow Github Users to Assume a Role
 
-TODO
+[Message us on Gitter for this!](https://gitter.im/saml-to/assume-aws-role-action)
 
 ## HOW-TO: Limit repository scope of access
 
-TODO
+[Message us on Gitter for this!](https://gitter.im/saml-to/assume-aws-role-action)
 
 ## Need additional Tips & Tricks?
 
