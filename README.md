@@ -40,7 +40,7 @@ See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role
 ## Configuration
 
 1. Create a new **SAML** [Identity Provider](https://console.aws.amazon.com/iamv2/home?#/identity_providers/create) in AWS IAM
-   1. **Provider Name**: `saml.to`
+   1. **Provider Name**: _Repository Name_ (the name of the repository running the action)
    1. **Metadata Document**: Download metadata from [here](https://saml.to/metadata).
    1. Make note of the **`Provder ARN`** in the AWS console
 1. Create or update the [Trust Relationship](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/edit_trust.html) on a new or existing IAM Role to contain the following:
@@ -63,7 +63,7 @@ See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role
      ]
    }
    ```
-   - Replace `PROVIDER_ARN` with the newly created ARN of the provider, e.g. `arn:aws:iam::123456789012:saml-provider/saml.to`
+   - Replace `PROVIDER_ARN` with the newly created ARN of the provider, e.g. `arn:aws:iam::123456789012:saml-provider/my-repository`
    - Make note of the **`Role ARN`** for this Role
 1. Add a new file named _`saml-to.yml`_ to the repository that needs AWS Access Credentials during GitHub Actions:
 
@@ -90,7 +90,7 @@ See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role
            self: true
    ```
 
-   - Replace `PROVIDER_ARN` with the ARN of the provider created above (e.g. `arn:aws:iam::123456689012:saml-provider/saml.to`)
+   - Replace `PROVIDER_ARN` with the ARN of the provider created above (e.g. `arn:aws:iam::123456689012:saml-provider/my-repository`)
    - Replace `ROLE_ARN` with the ARN of the IAM Role modified above. (e.g. `arn:aws:iam::123456689012:role/admin`)
 
 1. Modify the GitHub Action Workflow to obtain AWS Access Credentials
@@ -180,9 +180,9 @@ The generated AWS Session Toke.
 
 This is also be set in the `AWS_SESSION_TOKEN` environment variable.
 
-## Advanced Configuration
+## FAQs
 
-See [Advanced](ADVANCED.md)
+See [FAQs](FAQs.md)
 
 ## Maintainers
 
@@ -191,7 +191,7 @@ See [Advanced](ADVANCED.md)
 
 ## Help & Support
 
-- [Gitter](https://gitter.im/saml-to/assume-aws-role-action)
+- [Message us on Gitter](https://gitter.im/saml-to/assume-aws-role-action)
 - [Support via Twitter](https://twitter.com/SamlToSupport)
 - [Discussions](https://github.com/saml-to/assume-aws-role-action/discussions)
 
