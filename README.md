@@ -182,7 +182,7 @@ This is also be set in the `AWS_SESSION_TOKEN` environment variable.
 
 ## FAQs
 
-See [FAQs](FAQs.md)
+See [FAQs](FAQS.md)
 
 ## Maintainers
 
