@@ -8,7 +8,7 @@ import {
   GithubSlsRestApiAwsAssumeSdkOptions,
 } from '../api/github-sls-rest-api';
 
-const { GITHUB_TOKEN, GITHUB_REPOSITORY } = process.env;
+const { GITHUB_TOKEN, GITHUB_REPOSITORY, DEV, API_KEY } = process.env;
 
 export class Action {
   async run(): Promise<void> {
@@ -36,7 +36,13 @@ export class Action {
       );
     }
 
-    const api = new IDPApi(new Configuration({ accessToken: GITHUB_TOKEN }));
+    const configuration = new Configuration({ accessToken: GITHUB_TOKEN });
+    if (DEV) {
+      configuration.basePath = 'https://sso-nonlive.saml.to/github';
+      configuration.apiKey = API_KEY;
+    }
+
+    const api = new IDPApi(configuration);
 
     try {
       const { data: response } = await api.assumeRoleForRepo(
