@@ -76,7 +76,6 @@ export class Action {
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.log('!!! e', JSON.stringify(e));
       if (e && e.Code) {
         error(`AWS IAM couldn't assume the role with an ARN of \`${opts.RoleArn} using the SAML provider with an ARN of \`${opts.PrincipalArn}\`.
 
