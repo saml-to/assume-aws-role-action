@@ -1,6 +1,6 @@
 # assume-aws-role-action
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/saml-to/assume-aws-role-action?label=version) ![GitHub issues](https://img.shields.io/github/issues/saml-to/assume-aws-role-action) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/saml-to/assume-aws-role-action/Push%20to%20Main) ![Gitter](https://img.shields.io/gitter/room/saml-to/assume-aws-role-action)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/saml-to/assume-aws-role-action?label=version) ![GitHub issues](https://img.shields.io/github/issues/saml-to/assume-aws-role-action) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/saml-to/assume-aws-role-action/Push%20to%20Main) [![Gitter](https://img.shields.io/gitter/room/saml-to/assume-aws-role-action)](https://gitter.im/saml-to/assume-aws-role-action)
 
 This action enables workflows to obtain AWS Access Credentials for a desired IAM Role using **AWS IAM SAML** and a **GitHub Actions Repository Token**.
 
@@ -198,3 +198,5 @@ See [FAQs](FAQs.md)
 ## License
 
 [Apache-2.0 License](LICENSE)
+
+![](https://sso.saml.to/github/px?action)
