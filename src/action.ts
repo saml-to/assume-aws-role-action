@@ -81,9 +81,10 @@ export class Action {
         error(`AWS IAM couldn't assume the role with an ARN of \`${opts.RoleArn} using the SAML provider with an ARN of \`${opts.PrincipalArn}\`.
 
 Please ensure all of the following:
- 1) the SAML Provider ARN (${opts.PrincipalArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`, 
- 2) the Role ARN (${opts.RoleArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
- 3) the Role (${opts.RoleArn}) has a Trust Relationship with \`${opts.PrincipalArn}\`, which can be found by opening the Role in AWS IAM, choosing the Trust Relationship tab, editing it to ensure it's in the following format:
+ 1) the SAML Provider ARN (${opts.PrincipalArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`,
+ 2) the SAML Provider Metadata (${opts.PrincipalArn}) in AWS IAM is correct. It can be obtained by downloading it from: ${response.issuer}
+ 3) the Role ARN (${opts.RoleArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
+ 4) the Role (${opts.RoleArn}) has a Trust Relationship with \`${opts.PrincipalArn}\`, which can be found by opening the Role in AWS IAM, choosing the Trust Relationship tab, editing it to ensure it's in the following format:
       {
         "Version": "2012-10-17",
         "Statement": [
