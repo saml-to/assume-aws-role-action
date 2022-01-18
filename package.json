@@ -1,13 +1,13 @@
 {
-  "name": "@saml-to/assume-aws-role",
+  "name": "@saml-to/assume-aws-role-action",
   "version": "1.0.5-0",
   "description": "Assume an AWS Role using SAML.to",
-  "repository": "git@github.com:saml-to/assume-aws-role.git",
+  "repository": "git@github.com:saml-to/assume-aws-role-action.git",
   "author": "Scaffoldly",
   "bugs": {
-    "url": "https://github.com/saml-to/assume-aws-role/issues"
+    "url": "https://github.com/saml-to/assume-aws-role-action/issues"
   },
-  "homepage": "https://github.com/saml-to/assume-aws-role#readme",
+  "homepage": "https://github.com/saml-to/assume-aws-role-action#readme",
   "license": "Apache-2.0",
   "private": false,
   "scripts": {
