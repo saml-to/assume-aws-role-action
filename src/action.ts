@@ -76,22 +76,32 @@ export class Action {
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.log('!!! e', JSON.stringify(e));
-      console.log('!!! e.code', e.code);
-      if (e && e.Code && e.Code === 'InvalidIdentityToken') {
-        error(
-          `AWS IAM couldn't find a SAML provider with an ARN of \`${opts.PrincipalArn}\`. Please ensure the ARN is correct and is in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`. The ARN can be found in by navigating into the desired SAML Provider in AWS IAM's "Identity Providers" subsection. If a provider hasn't been created yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`,
-        );
+      if (e && e.Code) {
+        error(`AWS IAM couldn't assume the role with an ARN of \`${opts.RoleArn} using the SAML provider with an ARN of \`${opts.PrincipalArn}\`.
+
+Please ensure all of the following:
+ 1) the SAML Provider ARN (${opts.PrincipalArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`, 
+ 2) the Role ARN (${opts.RoleArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
+ 3) the Role (${opts.RoleArn}) has a Trust Relationship with \`${opts.PrincipalArn}\`, which can be found by opening the Role in AWS IAM, choosing the Trust Relationship tab, editing it to ensure it's in the following format:
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "${opts.PrincipalArn}"
+            },
+            "Action": "sts:AssumeRoleWithSAML",
+            "Condition": {
+              "StringEquals": {
+                "SAML:aud": "https://signin.aws.amazon.com/saml"
+              }
+            }
+          }
+        ]
       }
-      if (e && e.Code && e.Code === 'ValidationError') {
-        error(
-          `AWS IAM couldn't assume the role \`${opts.RoleArn}\`. Please ensure the Role ARN is correct and is in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`. If the role hasn't been created yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`,
-        );
-      }
-      if (e && e.code && e.code === 'AuthSamlInvalidSamlResponseException') {
-        error(
-          `Please ensure the Metadata is correct for Identity Provider \`${opts.PrincipalArn}\` in AWS IAM. The Metadata can be downloaded here: ${response.issuer}`,
-        );
+ 
+If a provider or role hasn't been created or configured yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`);
       }
       throw e;
     }
