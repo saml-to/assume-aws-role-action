@@ -39,9 +39,10 @@ See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role
 
 ## Configuration
 
+1. [Download Your Metadata](https://saml.to/metadata) from SAML.to
 1. Create a new **SAML** [Identity Provider](https://console.aws.amazon.com/iamv2/home?#/identity_providers/create) in AWS IAM
    1. **Provider Name**: _Repository Name_ (the name of the repository running the action)
-   1. **Metadata Document**: Download metadata from [here](https://saml.to/metadata).
+   1. **Metadata Document**: _Upload the Metadata Document from SAML.to_
    1. Make note of the **`Provder ARN`** in the AWS console
 1. Create or update the [Trust Relationship](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/edit_trust.html) on a new or existing IAM Role to contain the following:
    ```

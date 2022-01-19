@@ -1,5 +1,5 @@
 import { error, exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
-import { AssumeRoleWithSAMLResponse, STS } from '@aws-sdk/client-sts';
+import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
   Configuration,
@@ -44,6 +44,8 @@ export class Action {
 
     const api = new IDPApi(configuration);
 
+    let sdkOpts: GithubSlsRestApiAwsAssumeSdkOptions | undefined;
+
     try {
       const { data: response } = await api.assumeRoleForRepo(
         org,
@@ -54,49 +56,28 @@ export class Action {
 
       info(`SAML Response generated for login to ${response.provider} via ${response.recipient}`);
 
+      sdkOpts = response.sdkOptions;
+
       await this.assumeAws(response, region);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        let message = e.message;
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message;
-        }
-        throw new Error(`Unable to assume role: ${message}`);
-      }
-      throw e;
-    }
-  }
-
-  async assumeAws(response: GithubSlsRestApiSamlResponseContainer, region: string): Promise<void> {
-    const sts = new STS({ region });
-    const opts = response.sdkOptions as GithubSlsRestApiAwsAssumeSdkOptions;
-    if (!opts) {
-      throw new Error('Missing sdk options from saml response');
-    }
-
-    let assumeResponse: AssumeRoleWithSAMLResponse;
-    try {
-      assumeResponse = await sts.assumeRoleWithSAML({
-        ...opts,
-        SAMLAssertion: response.samlResponse,
-      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      if (e && e.Code) {
-        error(`AWS IAM couldn't assume the role with an ARN of \`${opts.RoleArn} using the SAML provider with an ARN of \`${opts.PrincipalArn}\`.
+      const providerHint = sdkOpts ? ` (${sdkOpts.PrincipalArn}) ` : ' ';
+      error(`Unable to assume the role with an ARN of \`${role}\`.
 
 Please ensure all of the following:
- 1) the SAML Provider ARN (${opts.PrincipalArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`,
- 2) the SAML Provider Metadata (${opts.PrincipalArn}) in AWS IAM is correct. It can be obtained by downloading it from: ${response.issuer}
- 3) the Role ARN (${opts.RoleArn}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
- 4) the Role (${opts.RoleArn}) has a Trust Relationship with \`${opts.PrincipalArn}\`, which can be found by opening the Role in AWS IAM, choosing the Trust Relationship tab, editing it to ensure it's in the following format:
+ 1) the SAML Provider Metadata${providerHint}in AWS IAM is correct. It can be obtained by downloading it from: https://saml.to/metadata/github/${org}
+ 2) the SAML Provider ARN${providerHint}is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`,
+ 3) the Role ARN (${role}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
+ 4) the Role (${role}) has the correct Trust Relationship ${
+        sdkOpts ? `with ${sdkOpts.PrincipalArn}` : ``
+      }, which can be found by opening the Role in AWS IAM, choosing the Trust Relationship tab, editing it to ensure it's in the following format:
       {
         "Version": "2012-10-17",
         "Statement": [
           {
             "Effect": "Allow",
             "Principal": {
-              "Federated": "${opts.PrincipalArn}"
+              "Federated": "${sdkOpts ? sdkOpts.PrincipalArn : 'YOUR_PROVIDER_ARN'}"
             },
             "Action": "sts:AssumeRoleWithSAML",
             "Condition": {
@@ -109,9 +90,28 @@ Please ensure all of the following:
       }
  
 If a provider or role hasn't been created or configured yet, please follow the configuration instructions: https://github.com/saml-to/assume-aws-role-action/blob/main/README.md#configuration`);
+      if (axios.isAxiosError(e)) {
+        let message = e.message;
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message;
+        }
+        throw new Error(`Error: ${message}`);
       }
       throw e;
     }
+  }
+
+  async assumeAws(response: GithubSlsRestApiSamlResponseContainer, region: string): Promise<void> {
+    const sts = new STS({ region });
+    const opts = response.sdkOptions as GithubSlsRestApiAwsAssumeSdkOptions;
+    if (!opts) {
+      throw new Error('Missing sdk options from saml response');
+    }
+
+    const assumeResponse = await sts.assumeRoleWithSAML({
+      ...opts,
+      SAMLAssertion: response.samlResponse,
+    });
 
     if (
       !assumeResponse.Credentials ||
