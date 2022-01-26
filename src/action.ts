@@ -1,4 +1,12 @@
-import { error, exportVariable, getInput, info, setFailed, setOutput } from '@actions/core';
+import {
+  error,
+  exportVariable,
+  getInput,
+  info,
+  setFailed,
+  setOutput,
+  warning,
+} from '@actions/core';
 import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -95,6 +103,29 @@ If a provider or role hasn't been created or configured yet, please follow the c
         if (e.response && e.response.data && e.response.data.message) {
           message = e.response.data.message;
         }
+
+        if (e.response && e.response.status === 403) {
+          const { data } = e.response;
+          if (data) {
+            const { context } = data;
+            if (context && context.org && context.repo && context.configFile) {
+              if (context.repo !== repo) {
+                warning(`
+NOTE: The SAML.to configuration for \`${org}\` is managed in a separate repository:
+  User/Org: ${context.org}
+  Repo: ${context.repo}
+  File: ${context.configFile}
+
+Provider configuration and role permissions must be made there.
+
+For more information on configuration files managed in a separate repository, visit:
+https://docs.saml.to/usage/github-actions/assume-aws-role-action#centrally-managed-configuration
+`);
+              }
+            }
+          }
+        }
+
         throw new Error(`Error: ${message}`);
       }
       throw e;
