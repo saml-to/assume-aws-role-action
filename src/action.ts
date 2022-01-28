@@ -110,11 +110,6 @@ If a provider or role hasn't been created or configured yet, please follow the c
           const { data } = e.response;
           if (data) {
             const { context } = data;
-            if (context && context.attributes) {
-              warning(`The following SAML attributes were sent: 
-${Object.entries(context.attributes).map(([k, v]) => ` - ${k}: ${v}`)}
-`);
-            }
             if (context && context.org && context.repo && context.configFile) {
               if (context.repo !== repo) {
                 warning(`The SAML.to configuration for \`${org}\` is managed in a separate repository:
