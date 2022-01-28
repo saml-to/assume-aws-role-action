@@ -1,5 +1,5 @@
 import { Action } from './action';
-import { setFailed } from '@actions/core';
+import { error, setFailed } from '@actions/core';
 
 (async () => {
   try {
@@ -8,6 +8,9 @@ import { setFailed } from '@actions/core';
   } catch (e) {
     if (e instanceof Error) {
       setFailed(e.message);
+      error(`
+Need help? https://docs.saml.to/troubleshooting/get-help
+`);
       return;
     }
     throw e;

@@ -70,7 +70,9 @@ export class Action {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const providerHint = sdkOpts ? ` (${sdkOpts.PrincipalArn}) ` : ' ';
-      error(`Unable to assume the role with an ARN of \`${role}\`.
+      error(`Unable to assume the role with an ARN of \`${role}\`${
+        provider ? ` (with explicitly specified provider: ${provider})` : ''
+      }.
 
 Please ensure all of the following:
  1) the SAML Provider Metadata${providerHint}in AWS IAM is correct. It can be obtained by downloading it from: https://saml.to/metadata/github/${org}
@@ -110,8 +112,7 @@ If a provider or role hasn't been created or configured yet, please follow the c
             const { context } = data;
             if (context && context.org && context.repo && context.configFile) {
               if (context.repo !== repo) {
-                warning(`
-NOTE: The SAML.to configuration for \`${org}\` is managed in a separate repository:
+                warning(`The SAML.to configuration for \`${org}\` is managed in a separate repository:
   User/Org: ${context.org}
   Repo: ${context.repo}
   File: ${context.configFile}
