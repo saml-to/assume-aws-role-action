@@ -68,9 +68,8 @@ export class Action {
 
       if (response.attributes) {
         info(`
-SAML Attributes:
-      ${Object.entries(response.attributes).map(([k, v]) => ` - ${k}: ${v}\n`)}
-`);
+SAML Attributes:`);
+        Object.entries(response.attributes).forEach(([k, v]) => info(` - ${k}: ${v}\n`));
       }
 
       await this.assumeAws(response, region);
