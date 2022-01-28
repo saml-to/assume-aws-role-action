@@ -171,9 +171,8 @@ https://docs.saml.to/usage/github-actions/assume-aws-role-action#centrally-manag
 
     const callerIdentity = await assumedSts.getCallerIdentity({});
 
-    info(
-      `Assumed ${opts.RoleArn}: ${callerIdentity.Arn} (Credential expiration at ${assumeResponse.Credentials.Expiration})`,
-    );
+    info(`
+Assumed ${opts.RoleArn}: ${callerIdentity.Arn} (Credential expiration at ${assumeResponse.Credentials.Expiration})`);
 
     exportVariable('AWS_DEFAULT_REGION', region);
     exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
