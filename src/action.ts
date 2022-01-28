@@ -66,7 +66,7 @@ export class Action {
 
       sdkOpts = response.sdkOptions;
 
-      if (response.attributes) {
+      if (response.attributes && Object.keys(response.attributes).length) {
         info(`
 SAML Attributes:`);
         Object.entries(response.attributes).forEach(([k, v]) => info(` - ${k}: ${v}`));
