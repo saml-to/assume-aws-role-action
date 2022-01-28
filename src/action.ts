@@ -66,12 +66,11 @@ export class Action {
 
       sdkOpts = response.sdkOptions;
 
-      // TODO log attributes
-      // if (response.attributes) {
-      //         log(`The following SAML attributes were sent:
-      // ${Object.entries(response.attributes).map(([k, v]) => ` - ${k}: ${v}`)}
-      // `);
-      //  }
+      if (response.attributes) {
+        info(`The following SAML attributes were sent:
+      ${Object.entries(response.attributes).map(([k, v]) => ` - ${k}: ${v}`)}
+`);
+      }
 
       await this.assumeAws(response, region);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
