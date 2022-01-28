@@ -67,8 +67,9 @@ export class Action {
       sdkOpts = response.sdkOptions;
 
       if (response.attributes) {
-        info(`The following SAML attributes were sent:
-      ${Object.entries(response.attributes).map(([k, v]) => ` - ${k}: ${v}`)}
+        info(`
+SAML Attributes:
+      ${Object.entries(response.attributes).map(([k, v]) => ` - ${k}: ${v}\n`)}
 `);
       }
 
