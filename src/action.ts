@@ -16,7 +16,7 @@ import {
   GithubSlsRestApiAwsAssumeSdkOptions,
 } from '../api/github-sls-rest-api';
 
-const { GITHUB_TOKEN, GITHUB_REPOSITORY, DEV, API_KEY } = process.env;
+const { GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_SHA, DEV, API_KEY } = process.env;
 
 export class Action {
   async run(): Promise<void> {
@@ -60,6 +60,7 @@ export class Action {
         repo,
         role,
         provider || undefined,
+        GITHUB_SHA,
       );
 
       info(`SAML Response generated for login to ${response.provider} via ${response.recipient}`);
