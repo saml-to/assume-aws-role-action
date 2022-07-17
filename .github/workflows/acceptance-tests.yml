@@ -10,35 +10,35 @@ on:
       - main
 
 jobs:
-  assume-nonlive-fail:
-    strategy:
-      matrix:
-        role:
-          - arn:aws:iam::656716386475:role/doesnotexist
-          - arn:aws:iam::000000000000:role/doesnotexist
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-      - run: yarn
-      - run: yarn build
-      - uses: ./
-        id: assume
-        continue-on-error: true
-        with:
-          role: ${{ matrix.role }}
-          configOwner: slyo-org-01
-          provider: aws-nonlive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SAML_TO_NONLIVE: true
-          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
-      - name: Assume Assertion (Success == Skipped)
-        if: job.steps.assume.status == success()
-        run: exit 1
+  # assume-nonlive-fail:
+  #   strategy:
+  #     matrix:
+  #       role:
+  #         - arn:aws:iam::656716386475:role/doesnotexist
+  #         - arn:aws:iam::000000000000:role/doesnotexist
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+  #         cache: 'yarn'
+  #     - run: yarn
+  #     - run: yarn build
+  #     - uses: ./
+  #       id: assume
+  #       continue-on-error: true
+  #       with:
+  #         role: ${{ matrix.role }}
+  #         configOwner: slyo-org-01
+  #         provider: aws-nonlive
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         SAML_TO_NONLIVE: true
+  #         SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+  #     - name: Assume Assertion (Success == Skipped)
+  #       if: job.steps.assume.status == success()
+  #       run: exit 1
 
   assume-nonlive:
     strategy:
