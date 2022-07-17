@@ -14,6 +14,9 @@ inputs:
   provider:
     description: The provider to use in saml-to.yml
     required: false
+  configOwner:
+    description: Specify a different GitHub Org/User that hosts the saml-to.yml, defaults to this repository's owner.
+    required: false
 outputs:
   region:
     description: The AWS region
