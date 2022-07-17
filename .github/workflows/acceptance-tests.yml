@@ -32,5 +32,6 @@ jobs:
           configOwner: slyo-org-01
           provider: aws-nonlive
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
