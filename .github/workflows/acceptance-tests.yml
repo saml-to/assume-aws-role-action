@@ -51,7 +51,7 @@ jobs:
       - run: yarn
       - run: yarn build
       - uses: ./
-        id: assume
+        name: Assume test-assume-aws-role-action-nonlive using saml-to/saml-to/saml-to.yml
         with:
           role: arn:aws:iam::580360238192:role/test-assume-aws-role-action-nonlive
         env:
@@ -59,7 +59,7 @@ jobs:
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
       - uses: ./
-        id: assume_with_configowner
+        name: Assume readonly-nonlive using slyo-org-01/saml-to/saml-to.yml
         with:
           role: arn:aws:iam::656716386475:role/readonly-nonlive
           configOwner: slyo-org-01
@@ -68,11 +68,11 @@ jobs:
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
       - uses: ./
-        id: assume_with_configowner_provider
+        name: Assume readonly using slyo-org-01/saml-to/saml-to.yml (with provider aws-nonlive)
         with:
           role: arn:aws:iam::656716386475:role/readonly
           configOwner: slyo-org-01
-          provider: readonly-nonlive
+          provider: aws-nonlive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SAML_TO_NONLIVE: true
