@@ -40,11 +40,7 @@ jobs:
   #       if: job.steps.assume.status == success()
   #       run: exit 1
 
-  assume-nonlive-with-config-owner:
-    strategy:
-      matrix:
-        role:
-          - arn:aws:iam::656716386475:role/readonly
+  assume-nonlive:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -57,31 +53,26 @@ jobs:
       - uses: ./
         id: assume
         with:
-          role: ${{ matrix.role }}
-          configOwner: slyo-org-01
-          provider: aws-nonlive
+          role: arn:aws:iam::580360238192:role/test-assume-aws-role-action-nonlive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
-  assume-nonlive:
-    strategy:
-      matrix:
-        role:
-          - arn:aws:iam::580360238192:role/test-assume-aws-role-action-nonlive
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-      - run: yarn
-      - run: yarn build
       - uses: ./
-        id: assume
+        id: assume_with_configowner
         with:
-          role: ${{ matrix.role }}
+          role: arn:aws:iam::656716386475:role/readonly-nonlive
+          configOwner: slyo-org-01
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SAML_TO_NONLIVE: true
+          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+      - uses: ./
+        id: assume_with_configowner_provider
+        with:
+          role: arn:aws:iam::656716386475:role/readonly
+          configOwner: slyo-org-01
+          provider: readonly-nonlive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SAML_TO_NONLIVE: true
