@@ -66,5 +66,5 @@ jobs:
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
       - name: Assume Assertion (Success == Skipped)
-        if: job.steps.assume.status == failure()
+        if: ${{ job.steps.assume.status == failure() }}
         run: exit 1
