@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         role:
-          - doesnotexist
           - arn:aws:iam::656716386475:role/doesnotexist
           - arn:aws:iam::000000000000:role/doesnotexist
     runs-on: ubuntu-latest
@@ -45,7 +44,6 @@ jobs:
     strategy:
       matrix:
         role:
-          - readonly
           - arn:aws:iam::656716386475:role/readonly
     runs-on: ubuntu-latest
     steps:
