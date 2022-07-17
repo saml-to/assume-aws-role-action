@@ -10,11 +10,13 @@ on:
       - main
 
 jobs:
-  assume-nonlive:
+  assume-nonlive-fail:
     strategy:
       matrix:
         role:
-          - arn:aws:iam::656716386475:role/readonly
+          - doesnotexist
+          - arn:aws:iam::656716386475:role/doesnotexist
+          - arn:aws:iam::000000000000:role/doesnotexist
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +26,7 @@ jobs:
           cache: 'yarn'
       - run: yarn
       - run: yarn build
-      - uses: .
+      - uses: ./
         with:
           role: ${{ matrix.role }}
           configOwner: slyo-org-01
