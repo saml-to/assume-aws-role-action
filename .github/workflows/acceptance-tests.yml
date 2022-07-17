@@ -108,7 +108,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./
-        name: Assume readonly using slyo-org-01/saml-to/saml-to.yml
+        name: Assume readonly-live using slyo-org-01/saml-to/saml-to.yml
         with:
           role: arn:aws:iam::656716386475:role/readonly-live
           configOwner: slyo-org-01

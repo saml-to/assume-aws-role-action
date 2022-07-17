@@ -1,12 +1,4 @@
-import {
-  error,
-  exportVariable,
-  getInput,
-  info,
-  setFailed,
-  setOutput,
-  warning,
-} from '@actions/core';
+import { error, exportVariable, getInput, info, notice, setFailed, setOutput } from '@actions/core';
 import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -124,7 +116,7 @@ If a provider or role hasn't been created or configured yet, please follow the c
             const { context } = data;
             if (context && context.org && context.repo && context.configFile) {
               if (context.repo !== repo) {
-                warning(`The SAML.to configuration for \`${org}\` is managed in a separate repository:
+                notice(`The SAML.to configuration for \`${org}/${repo}\` is managed in a separate repository:
   User/Org: ${context.org}
   Repo: ${context.repo}
   File: ${context.configFile}
