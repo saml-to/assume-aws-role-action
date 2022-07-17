@@ -16,7 +16,8 @@ import {
   GithubSlsRestApiAwsAssumeSdkOptions,
 } from '../api/github-sls-rest-api';
 
-const { GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_SHA, DEV, API_KEY } = process.env;
+const { GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_SHA, SAML_TO_NONLIVE, SAML_TO_API_KEY } =
+  process.env;
 
 export class Action {
   async run(): Promise<void> {
@@ -25,18 +26,10 @@ export class Action {
       return;
     }
 
-    const role = getInput('role', { required: true });
-    const provider = getInput('provider', { required: false });
-    const region = getInput('region', { required: false }) || 'us-east-1';
-    if (provider) {
-      info(`Assuming ${provider} Role: ${role} in ${region}`);
-    } else {
-      info(`Assuming Role: ${role} in ${region}`);
-    }
-
     if (!GITHUB_REPOSITORY) {
       throw new Error('Missing GITHUB_REPOSITORY environment variable');
     }
+
     const [org, repo] = GITHUB_REPOSITORY.split('/');
     if (!org || !repo) {
       throw new Error(
@@ -44,10 +37,21 @@ export class Action {
       );
     }
 
+    const role = getInput('role', { required: true });
+    const provider = getInput('provider', { required: false });
+    const region = getInput('region', { required: false }) || 'us-east-1';
+    const configOwner = getInput('configOwner', { required: false }) || org;
+
+    if (provider) {
+      info(`Assuming ${provider} Role: ${role} in ${region}`);
+    } else {
+      info(`Assuming Role: ${role} in ${region}`);
+    }
+
     const configuration = new Configuration({ accessToken: GITHUB_TOKEN });
-    if (DEV) {
+    if (SAML_TO_NONLIVE) {
       configuration.basePath = 'https://sso-nonlive.saml.to/github';
-      configuration.apiKey = API_KEY;
+      configuration.apiKey = SAML_TO_API_KEY;
     }
 
     const api = new IDPApi(configuration);
@@ -61,6 +65,7 @@ export class Action {
         role,
         provider || undefined,
         GITHUB_SHA,
+        configOwner,
       );
 
       info(`SAML Response generated for login to ${response.provider} via ${response.recipient}`);

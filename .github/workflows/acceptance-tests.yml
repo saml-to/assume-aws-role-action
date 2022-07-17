@@ -1,0 +1,34 @@
+name: 'Run Acceptance Tests'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  assume-nonlive:
+    strategy:
+      matrix:
+        role:
+          - arn:aws:iam::656716386475:role/readonly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+      - uses: .
+        with:
+          role: ${{ matrix.role }}
+          configOwner: slyo-org-01
+          provider: aws-nonlive
+        env:
+          SAML_TO_NONLIVE: true
+          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
