@@ -90,16 +90,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
-      - uses: ./
-        name: Assume readonly using slyu-standalone-01/saml-to-repo-001/saml-to-nonlive.yml
-        with:
-          role: arn:aws:iam::656716386475:role/readonly
-          configOwner: slyu-standalone-01
-          configPath: saml-to-repo-001/saml-to-nonlive.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.SLYU_STANDALONE_01_USER_EMAIL_GH_TOKEN }}
-          SAML_TO_NONLIVE: true
-          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+      # TODO: To support this, we must augment the backend to support configPath for User Tokens
+      # - uses: ./
+      #   name: Assume readonly using slyu-standalone-01/saml-to-repo-001/saml-to-nonlive.yml
+      #   with:
+      #     role: arn:aws:iam::656716386475:role/readonly
+      #     configOwner: slyu-standalone-01
+      #     configPath: saml-to-repo-001/saml-to-nonlive.yml
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.SLYU_STANDALONE_01_USER_EMAIL_GH_TOKEN }}
+      #     SAML_TO_NONLIVE: true
+      #     SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
 
   assume:
     runs-on: ubuntu-latest
@@ -132,13 +133,14 @@ jobs:
           provider: aws
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./
-        name: Assume readonly using slyu-standalone-01/saml-to-repo-001/saml-to-live.yml
-        with:
-          role: arn:aws:iam::656716386475:role/readonly
-          configOwner: slyu-standalone-01
-          configPath: saml-to-repo-001/saml-to-live.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.SLYU_STANDALONE_01_USER_EMAIL_GH_TOKEN }}
-          SAML_TO_NONLIVE: true
-          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+      # TODO: To support this, we must augment the backend to support configPath for User Tokens
+      # - uses: ./
+      #   name: Assume readonly using slyu-standalone-01/saml-to-repo-001/saml-to-live.yml
+      #   with:
+      #     role: arn:aws:iam::656716386475:role/readonly
+      #     configOwner: slyu-standalone-01
+      #     configPath: saml-to-repo-001/saml-to-live.yml
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.SLYU_STANDALONE_01_USER_EMAIL_GH_TOKEN }}
+      #     SAML_TO_NONLIVE: true
+      #     SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
