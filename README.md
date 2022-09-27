@@ -135,6 +135,12 @@ If there are multiple `provider` entries in the `saml-to.yml` configuration file
 
 **Default**: `` (_Empty String_)
 
+### `configPath` (_Optional_)
+
+Specify an alternative path to the `saml-to.yml` configuration file.
+
+**Default**: `saml-to.yml`
+
 ## Outputs
 
 ### `region`

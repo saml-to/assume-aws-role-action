@@ -33,6 +33,7 @@ export class Action {
     const provider = getInput('provider', { required: false });
     const region = getInput('region', { required: false }) || 'us-east-1';
     const configOwner = getInput('configOwner', { required: false }) || org;
+    const configPath = getInput('configPath', { required: false }) || 'saml-to.yml';
 
     if (provider) {
       info(`Assuming ${provider} Role: ${role} in ${region}`);
@@ -58,6 +59,7 @@ export class Action {
         provider || undefined,
         GITHUB_SHA,
         configOwner,
+        configPath,
       );
 
       info(`SAML Response generated for login to ${response.provider} via ${response.recipient}`);
@@ -80,8 +82,8 @@ SAML Attributes:`);
 
 Please ensure all of the following:
  1) the SAML Provider Metadata${providerHint}in AWS IAM is correct. It can be obtained by downloading it from: https://saml.to/metadata/github/${org}
- 2) the SAML Provider ARN${providerHint}is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`,
- 3) the Role ARN (${role}) is correct in the \`saml-to.yml\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
+ 2) the SAML Provider ARN${providerHint}is correct in the \`${configPath}\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:saml-provider/PROVIDER_NAME\`,
+ 3) the Role ARN (${role}) is correct in the \`${configPath}\` configuration file, and in the format of \`arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME\`
  4) the Role (${role}) has the correct Trust Relationship ${
         sdkOpts ? `with ${sdkOpts.PrincipalArn}` : ``
       }, which can be found by opening the Role in AWS IAM, choosing the Trust Relationship tab, editing it to ensure it's in the following format:

@@ -17,6 +17,9 @@ inputs:
   configOwner:
     description: Specify a different GitHub Org/User that hosts the saml-to.yml, defaults to this repository's owner.
     required: false
+  configPath:
+    description: "Specify a path to the SAML.to config file (Default: 'saml-to.yml')"
+    required: false
 outputs:
   region:
     description: The AWS region
