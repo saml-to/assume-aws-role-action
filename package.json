@@ -1,6 +1,6 @@
 {
   "name": "@saml-to/assume-aws-role-action",
-  "version": "1.0.9-3",
+  "version": "1.0.9",
   "description": "Assume an AWS Role using SAML.to",
   "repository": "git@github.com:saml-to/assume-aws-role-action.git",
   "author": "Scaffoldly",
