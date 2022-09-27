@@ -105,7 +105,7 @@ See [aws-assume-role-action-examples](https://github.com/saml-to/aws-assume-role
           steps:
             - uses: actions/checkout@v2
             ...
-            - uses: saml-to/assume-aws-role@v1
+            - uses: saml-to/assume-aws-role-action@v1
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
