@@ -139,6 +139,12 @@ If there are multiple `provider` entries in the `saml-to.yml` configuration file
 
 Specify an alternative path to the `saml-to.yml` configuration file.
 
+### `profile` (_Optional_)
+
+Store the credentials to the provided named profile in `~/.aws` (instead of writing them to Environment Variables)
+
+**Default**: `` (_Empty String_)
+
 **Default**: `saml-to.yml`
 
 ## Outputs
