@@ -20,6 +20,9 @@ inputs:
   configPath:
     description: "Specify a path to the SAML.to config file (Default: 'saml-to.yml')"
     required: false
+  profile:
+    description: 'Store the credentials to the provided named profile in `~/.aws` (instead of writing them to Environment Variables)'
+    required: false
 outputs:
   region:
     description: The AWS region

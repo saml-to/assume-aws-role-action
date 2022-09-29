@@ -144,3 +144,25 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.SLYU_STANDALONE_01_USER_EMAIL_GH_TOKEN }}
       #     SAML_TO_NONLIVE: true
       #     SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+
+  assume-with-profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+      - uses: ./
+        name: Assume test-assume-aws-role-action using saml-to/saml-to/saml-to.yml
+        with:
+          role: arn:aws:iam::580360238192:role/test-assume-aws-role-action
+          profile: my-profile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: aws sts get-calller-identity
+        name: Test using environment variable
+      - run: aws sts get-calller-identity --profile my-profile
+        name: Test using --profile flag
