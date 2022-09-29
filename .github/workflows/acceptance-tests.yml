@@ -162,7 +162,7 @@ jobs:
           profile: my-profile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: aws sts get-calller-identity
+      - run: aws sts get-caller-identity
         name: Test using environment variable
-      - run: aws sts get-calller-identity --profile my-profile
+      - run: aws sts get-caller-identity --profile my-profile
         name: Test using --profile flag
