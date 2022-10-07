@@ -178,7 +178,7 @@ jobs:
       - uses: ./
         name: Assume slyo-org-01-readonly-nonlive using slyo-org-01/saml-to/saml-to.yml
         with:
-          role: arn:aws:iam::758332006924:role/slyo-org-01-readonly-nonlive
+          role: arn:aws:iam::758332006924:role/slyo-org-01-readonly-live
           configOwner: slyo-org-01
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
