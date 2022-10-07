@@ -7,6 +7,7 @@ import {
   GithubSlsRestApiSamlResponseContainer,
   GithubSlsRestApiAwsAssumeSdkOptions,
 } from '../api/github-sls-rest-api';
+import { exec } from './exec';
 
 const { GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_SHA, SAML_TO_NONLIVE, SAML_TO_API_KEY } =
   process.env;
@@ -34,6 +35,7 @@ export class Action {
     const region = getInput('region', { required: false }) || 'us-east-1';
     const configOwner = getInput('configOwner', { required: false }) || org;
     const configPath = getInput('configPath', { required: false }) || 'saml-to.yml';
+    const profile = getInput('profile', { required: false }) || undefined;
 
     if (provider) {
       info(`Assuming ${provider} Role: ${role} in ${region}`);
@@ -72,7 +74,7 @@ SAML Attributes:`);
         Object.entries(response.attributes).forEach(([k, v]) => info(` - ${k}: ${v}`));
       }
 
-      await this.assumeAws(response, region);
+      await this.assumeAws(response, region, profile);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const providerHint = sdkOpts ? ` (${sdkOpts.PrincipalArn}) ` : ' ';
@@ -139,7 +141,11 @@ https://docs.saml.to/usage/github-actions/assume-aws-role-action#centrally-manag
     }
   }
 
-  async assumeAws(response: GithubSlsRestApiSamlResponseContainer, region: string): Promise<void> {
+  async assumeAws(
+    response: GithubSlsRestApiSamlResponseContainer,
+    region: string,
+    profile?: string,
+  ): Promise<void> {
     const sts = new STS({ region });
     const opts = response.sdkOptions as GithubSlsRestApiAwsAssumeSdkOptions;
     if (!opts) {
@@ -174,11 +180,6 @@ https://docs.saml.to/usage/github-actions/assume-aws-role-action#centrally-manag
     info(`
 Assumed ${opts.RoleArn}: ${callerIdentity.Arn} (Credential expiration at ${assumeResponse.Credentials.Expiration})`);
 
-    exportVariable('AWS_DEFAULT_REGION', region);
-    exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
-    exportVariable('AWS_SECRET_ACCESS_KEY', assumeResponse.Credentials.SecretAccessKey);
-    exportVariable('AWS_SESSION_TOKEN', assumeResponse.Credentials.SessionToken);
-
     setOutput('region', region);
     setOutput('accountId', callerIdentity.Account);
     setOutput('userId', callerIdentity.UserId);
@@ -187,5 +188,30 @@ Assumed ${opts.RoleArn}: ${callerIdentity.Arn} (Credential expiration at ${assum
     setOutput('accessKeyId', assumeResponse.Credentials.AccessKeyId);
     setOutput('secretAccessKey', assumeResponse.Credentials.SecretAccessKey);
     setOutput('sessionToken', assumeResponse.Credentials.SessionToken);
+
+    if (profile) {
+      exportVariable('AWS_PROFILE', profile);
+
+      const base = ['aws', 'configure'];
+
+      if (profile !== 'default') {
+        base.push('--profile', profile);
+      }
+      base.push('set');
+      await exec([...base, 'region', region]);
+      await exec([...base, 'aws_access_key_id', assumeResponse.Credentials.AccessKeyId]);
+      await exec([...base, 'aws_secret_access_key', assumeResponse.Credentials.SecretAccessKey]);
+      await exec([...base, 'aws_session_token', assumeResponse.Credentials.SessionToken]);
+
+      info(`AWS Profile has been set!`);
+      return;
+    }
+
+    exportVariable('AWS_DEFAULT_REGION', region);
+    exportVariable('AWS_ACCESS_KEY_ID', assumeResponse.Credentials.AccessKeyId);
+    exportVariable('AWS_SECRET_ACCESS_KEY', assumeResponse.Credentials.SecretAccessKey);
+    exportVariable('AWS_SESSION_TOKEN', assumeResponse.Credentials.SessionToken);
+
+    info(`Environment Variables have been set!`);
   }
 }
