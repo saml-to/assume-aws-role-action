@@ -122,6 +122,60 @@ jobs:
           SAML_TO_NONLIVE: true
           SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
 
+  assume-nonlive-multiaccount: # TODO: assert account ID
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+      - uses: ./
+        name: Assume slyo-org-01-readonly-nonlive in account 931426163329 using slyo-org-01/saml-to/saml-to.yml
+        with:
+          role: arn:aws:iam::931426163329:role/slyo-org-01-readonly-nonlive
+          configOwner: slyo-org-01
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SAML_TO_NONLIVE: true
+          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+      - uses: ./
+        name: Assume slyo-org-01-readonly-nonlive in account 013527058470 using slyo-org-01/saml-to/saml-to.yml
+        with:
+          role: arn:aws:iam::013527058470:role/slyo-org-01-readonly-nonlive
+          configOwner: slyo-org-01
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SAML_TO_NONLIVE: true
+          SAML_TO_API_KEY: ${{ secrets.NONLIVE_API_KEY }}
+
+  assume-multiaccount: # TODO: assert account ID
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+      - uses: ./
+        name: Assume slyo-org-01-readonly in account 931426163329 using slyo-org-01/saml-to/saml-to.yml
+        with:
+          role: arn:aws:iam::931426163329:role/slyo-org-01-readonly
+          configOwner: slyo-org-01
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./
+        name: Assume slyo-org-01-readonly in account 013527058470 using slyo-org-01/saml-to/saml-to.yml
+        with:
+          role: arn:aws:iam::013527058470:role/slyo-org-01-readonly
+          configOwner: slyo-org-01
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   assume:
     runs-on: ubuntu-latest
     steps:
