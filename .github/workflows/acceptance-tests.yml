@@ -162,16 +162,16 @@ jobs:
       - run: yarn
       - run: yarn build
       - uses: ./
-        name: Assume slyo-org-01-readonly in account 931426163329 using slyo-org-01/saml-to/saml-to.yml
+        name: Assume slyo-org-01-readonly-live in account 931426163329 using slyo-org-01/saml-to/saml-to.yml
         with:
-          role: arn:aws:iam::931426163329:role/slyo-org-01-readonly
+          role: arn:aws:iam::931426163329:role/slyo-org-01-readonly-live
           configOwner: slyo-org-01
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./
-        name: Assume slyo-org-01-readonly in account 013527058470 using slyo-org-01/saml-to/saml-to.yml
+        name: Assume slyo-org-01-readonly-live in account 013527058470 using slyo-org-01/saml-to/saml-to.yml
         with:
-          role: arn:aws:iam::013527058470:role/slyo-org-01-readonly
+          role: arn:aws:iam::013527058470:role/slyo-org-01-readonly-live
           configOwner: slyo-org-01
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
