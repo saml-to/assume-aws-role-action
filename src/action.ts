@@ -1,4 +1,4 @@
-import { error, exportVariable, getInput, info, notice, setFailed, setOutput } from '@actions/core';
+import { exportVariable, getInput, info, notice, setFailed, setOutput } from '@actions/core';
 import { STS } from '@aws-sdk/client-sts';
 import axios from 'axios';
 import {
@@ -78,7 +78,7 @@ SAML Attributes:`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const providerHint = sdkOpts ? ` (${sdkOpts.PrincipalArn}) ` : ' ';
-      error(`Unable to assume the role with an ARN of \`${role}\`${
+      notice(`Unable to assume the role with an ARN of \`${role}\`${
         provider ? ` (with explicitly specified provider: ${provider})` : ''
       }.
 

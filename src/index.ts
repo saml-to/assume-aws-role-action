@@ -1,5 +1,5 @@
 import { Action } from './action';
-import { setFailed, warning } from '@actions/core';
+import { setFailed, notice } from '@actions/core';
 
 (async () => {
   try {
@@ -8,7 +8,7 @@ import { setFailed, warning } from '@actions/core';
   } catch (e) {
     if (e instanceof Error) {
       setFailed(e.message);
-      warning(`Need help? https://docs.saml.to/troubleshooting/get-help`);
+      notice(`Need help? https://docs.saml.to/troubleshooting/get-help`);
       return;
     }
     throw e;
