@@ -43,7 +43,12 @@ export class Action {
       info(`Assuming Role: ${role} in ${region}`);
     }
 
-    const configuration = new Configuration({ accessToken: GITHUB_TOKEN });
+    const configuration = new Configuration({
+      accessToken: GITHUB_TOKEN,
+      baseOptions: {
+        headers: { 'User-Agent': 'assume-aws-role-action', Origin: GITHUB_REPOSITORY },
+      },
+    });
     if (SAML_TO_NONLIVE) {
       configuration.basePath = 'https://sso-nonlive.saml.to/github';
       configuration.apiKey = SAML_TO_API_KEY;
